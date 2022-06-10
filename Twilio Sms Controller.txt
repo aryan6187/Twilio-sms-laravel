@@ -1,0 +1,61 @@
+<?php
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use Exception;
+use Twilio\Rest\Client;
+
+use Carbon\Carbon;
+use Illuminate\Support\ServiceProvider;
+use Twilio\Jwt\AccessToken;
+class SmsController extends Controller
+{
+
+
+   public function __construct(){
+      
+        $sid = getenv("TWILIO_SID");
+        $token = getenv("TWILIO_TOKEN");
+       $form=getenv('TWILIO_FROM');
+        $twilio = new Client($sid, $token);
+    }
+
+
+
+
+
+
+
+ /**
+     * sms function through twillio .
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+     public function sendSms($receiverNumber, $message)
+    {
+    
+        try {
+  
+            $account_sid = getenv("TWILIO_SID");
+            $auth_token = getenv("TWILIO_TOKEN");
+            $twilio_number = getenv("TWILIO_FROM");
+            $client = new Client($account_sid, $auth_token);
+
+            $client->messages->create($receiverNumber, [
+                'from' => $twilio_number, 
+                'body' => $message]);  
+        } catch (Exception $e) {
+            return response()->json(['status'=> 'Error', 'status_code'=> '401','message'=>'something went Wrong'], 500); 
+
+        }
+    
+    }
+
+
+//getenv("TWILIO_SID");
+//getenv("TWILIO_TOKEN"); => Get this thing on twilio console and put on laravel (.env )
+//getenv("TWILIO_FROM");
+
+
+
+}
